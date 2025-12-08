@@ -92,3 +92,84 @@ class Game {
 }
 
 window.onload = () => new Game();
+
+// inventory js 
+window.InventoryUI = {
+  render(inv) {
+    const el = document.getElementById("inventory");
+    el.innerHTML = "";
+
+    Object.keys(inv).forEach(id => {
+      const item = GAME_ITEMS.find(i => i.id === id);
+      const count = inv[id];
+
+      const d = document.createElement("div");
+      d.className = "item";
+      d.textContent = `${item.name} x${count}`;
+      el.appendChild(d);
+    });
+  }
+};
+
+// items js
+window.GAME_ITEMS = [
+  {
+    id: "bubble_tea",
+    name: "Bubble Tea",
+    rarity: "common"
+  },
+  {
+    id: "pineapple_cake",
+    name: "Pineapple Cake",
+    rarity: "common"
+  },
+  {
+    id: "red_lantern",
+    name: "Red Lantern",
+    rarity: "rare"
+  },
+  {
+    id: "taiwan_map",
+    name: "Taiwan Map",
+    rarity: "rare"
+  },
+  {
+    id: "lucky_charm",
+    name: "Lucky Charm",
+    rarity: "ultra"
+  },
+  {
+    id: "stinky_tofu",
+    name: "Stinky Tofu Plate",
+    rarity: "common"
+  }
+];
+
+// save js
+window.Save = {
+  load() {
+    return JSON.parse(localStorage.getItem("gg_save") || "{}");
+  },
+
+  save(data) {
+    localStorage.setItem("gg_save", JSON.stringify(data));
+  }
+};
+
+// levels js
+window.TOWER_LEVELS = [
+  { id: 1, name: "Night Market Floor", requirement: 3 },
+  { id: 2, name: "Temple Garden Floor", requirement: 6 },
+  { id: 3, name: "Mountain Lookout Floor", requirement: 10 }
+];
+
+const scenes = {
+  "Taipei 101": "assets/scenes/taipei101.jpg",
+  "Jiufen Lantern": "assets/scenes/jiufen.jpg"
+};
+
+function loadScene(sceneName) {
+  document.getElementById("scene-display").innerHTML =
+    `<img src="${scenes[sceneName]}" class="scene-img">`;
+}
+

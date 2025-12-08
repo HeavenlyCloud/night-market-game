@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <title>Gachapon Globe: Taiwan Treasures</title>
@@ -15,6 +16,11 @@
     <span id="gems">Gems: 0</span>
   </div>
 
+  <div id="capsule-display"></div>
+  <button onclick="pullCapsule()">Pull Capsule</button>
+  <div id="inventory"></div>
+
+
   <!-- Gacha -->
   <button id="pull-one">Pull (1 Capsule)</button>
   <button id="pull-ten">Pull x10</button>
@@ -29,9 +35,14 @@
   <h2>Tower Progression</h2>
   <div id="tower"></div>
 
+  <div id="scene-display"></div>
+
   <!-- Shop -->
-  <h2>Shop</h2>
-  <div id="shop"></div>
+  <div id="shop">
+    <button onclick="alert('Gem Shop coming soon')">Gem Shop</button>
+    <button onclick="alert('Capsule Packs coming soon')">Capsule Packs</button>
+  </div>
+
 
   <script src="data/items.js"></script>
   <script src="data/levels.js"></script>
@@ -41,4 +52,5 @@
   <script src="ui/shop.js"></script>
   <script src="game.js"></script>
 </body>
+
 </html>
