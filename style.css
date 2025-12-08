@@ -1,0 +1,28 @@
+body {
+  font-family: sans-serif;
+  padding: 20px;
+}
+
+#results {
+  margin: 20px 0;
+  padding: 10px;
+  background: #f0f7ff;
+  border: 1px solid #aae;
+}
+
+.item {
+  display: inline-block;
+  padding: 6px 10px;
+  margin: 4px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.level {
+  padding: 6px;
+  margin: 4px 0;
+  background: #ffd;
+  border: 1px solid #cc8;
+  border-radius: 5px;
+}

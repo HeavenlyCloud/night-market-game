@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Gachapon Globe: Taiwan Treasures</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <h1>Gachapon Globe: Taiwan Treasures</h1>
+
+  <!-- Currency UI -->
+  <div id="currency">
+    <span id="coins">Coins: 0</span> |
+    <span id="gems">Gems: 0</span>
+  </div>
+
+  <!-- Gacha -->
+  <button id="pull-one">Pull (1 Capsule)</button>
+  <button id="pull-ten">Pull x10</button>
+
+  <div id="results"></div>
+
+  <!-- Inventory -->
+  <h2>Inventory</h2>
+  <div id="inventory"></div>
+
+  <!-- Tower -->
+  <h2>Tower Progression</h2>
+  <div id="tower"></div>
+
+  <!-- Shop -->
+  <h2>Shop</h2>
+  <div id="shop"></div>
+
+  <script src="data/items.js"></script>
+  <script src="data/levels.js"></script>
+  <script src="systems/save.js"></script>
+  <script src="systems/gacha.js"></script>
+  <script src="ui/inventory.js"></script>
+  <script src="ui/shop.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
