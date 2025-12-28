@@ -1,125 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gachapon Globe – MVP</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Gachapon Globe: Taiwan Treasures</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-
-  <div class="app">
+  <div id="app" class="app">
     <header class="topbar">
-      <div class="title">
-        <div class="badge">TAIWAN</div>
-        <h1>Gachapon Globe</h1>
-        <p class="subtitle">Stop the needle. Crack the capsule. Collect the memory.</p>
+      <div class="brand">
+        <div class="badgeRow">
+          <span class="badge">GACHAPON GLOBE</span>
+          <span id="regionBadge" class="badge ghost">Region: Taiwan</span>
+          <span id="streakBadge" class="badge ghost">Streak: 0</span>
+        </div>
+        <h1 class="title">Taiwan Treasures</h1>
+        <p id="lumoLine" class="subtitle">Pull capsules to rebuild the floating Tower.</p>
       </div>
 
       <div class="hud">
-        <div class="stat">
-          <span class="label">Tower</span>
-          <span id="towerLevel" class="value">1</span>
-        </div>
-        <div class="stat">
-          <span class="label">Coins</span>
-          <span id="coins" class="value">0</span>
-        </div>
+        <div class="stat"><span class="label">Tower</span><span id="towerLevel" class="value">1</span></div>
+        <div class="stat"><span class="label">Coins</span><span id="coins" class="value">0</span></div>
       </div>
     </header>
 
+    <nav class="tabs">
+      <button class="tab active" data-route="machine">Machine</button>
+      <button class="tab" data-route="collection">Collection</button>
+      <button class="tab" data-route="scenes">Scenes</button>
+      <button class="tab" data-route="minigames">Mini-Games</button>
+      <button class="tab" data-route="shop">Shop</button>
+      <button class="tab" data-route="settings">Settings</button>
+    </nav>
+
     <main class="stage">
-      <section class="machine" id="machine">
-        <div class="machineHead">
-          <div class="machineLamp"></div>
-          <div class="machineName">Gachapon Machine</div>
-          <button class="pill" id="inventoryToggle" type="button">Inventory</button>
-          <button id="dailyBtn" class="pill">Daily Bonus</button>
-          <span id="streakText" class="subtitle"></span>
-
-        </div>
-
-        <div class="skillWrap">
-          <div class="skillLabel">
-            <span>COMMON</span>
-            <span>RARE</span>
-            <span>ULTRA</span>
-          </div>
-
-          <div id="bar-container" class="barContainer" aria-label="timing bar">
-            <div class="zone zone-common"></div>
-            <div class="zone zone-rare"></div>
-            <div class="zone zone-ultra"></div>
-
-            <div id="needle" class="needle"></div>
-            <div class="shine"></div>
-          </div>
-
-          <button id="stopBtn" class="cta" type="button">
-            <span class="ctaText">STOP</span>
-            <span class="ctaHint">Hit the gold zone</span>
-          </button>
-
-          <div class="progress">
-            <div class="progressText">
-              <span>Next tower level</span>
-              <span id="towerProgressText">0/5</span>
-            </div>
-            <div class="progressBar">
-              <div id="towerProgressFill" class="progressFill"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="rewardArea">
-          <div id="rewardCard" class="rewardCard hidden">
-            <div class="rewardTop">
-              <div id="rewardRarity" class="rarityTag">RARE</div>
-              <div class="rewardSpark"></div>
-            </div>
-            <div id="rewardName" class="rewardName">Lantern Charm</div>
-            <div id="rewardDesc" class="rewardDesc">A lucky charm from Jiufen’s lantern street.</div>
-
-            <div class="rewardActions">
-              <button id="pullAgain" class="secondary" type="button">Pull Again</button>
-              <button id="shareFake" class="secondary" type="button">Share</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Inventory Drawer -->
-      <aside class="drawer" id="drawer">
-        <div class="drawerHead">
-          <div>
-            <h2>Collection</h2>
-            <p id="invCount" class="drawerSub">0 items collected</p>
-          </div>
-          <button id="drawerClose" class="pill" type="button">Close</button>
-        </div>
-
-        <div class="filters">
-          <button class="chip active" data-filter="ALL">All</button>
-          <button class="chip" data-filter="Common">Common</button>
-          <button class="chip" data-filter="Rare">Rare</button>
-          <button class="chip" data-filter="Ultra">Ultra</button>
-        </div>
-
-        <div id="inventoryGrid" class="grid"></div>
-      </aside>
-
-      <!-- Overlay -->
+      <section id="view" class="view"></section>
       <div id="overlay" class="overlay hidden"></div>
-
-      <!-- Confetti Canvas -->
-      <canvas id="confetti"></canvas>
+      <canvas id="fx" class="fx"></canvas>
     </main>
   </div>
 
-  <script src="js/items.js"></script>
-  <script src="js/app.js"></script>
+  <script type="module" src="js/app.js"></script>
 </body>
-
 </html>
