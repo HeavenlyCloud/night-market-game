@@ -1,0 +1,1502 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;700;900&display=swap');
+
+:root {
+    --bgTop: #0b1022;
+    --bgMid: #111a33;
+    --bgBot: #07070a;
+
+    --panel: rgba(255, 255, 255, .10);
+    --panel2: rgba(255, 255, 255, .06);
+    --border: rgba(255, 255, 255, .14);
+
+    --text: #f7f9ff;
+    --muted: #b9c2e8;
+
+    --pink: #ff7dd8;
+    --lav: #9a7bff;
+    --mint: #75ffd8;
+    --gold: #ffe37a;
+
+    --shadow: 0 30px 70px rgba(0, 0, 0, .55);
+    --softshadow: 0 16px 40px rgba(0, 0, 0, .35);
+}
+
+* {
+    box-sizing: border-box
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    color: var(--text);
+    overflow-x: hidden;
+
+    background:
+        radial-gradient(900px 520px at 20% 15%, rgba(154, 123, 255, .34), transparent 60%),
+        radial-gradient(920px 520px at 80% 0%, rgba(255, 125, 216, .22), transparent 58%),
+        radial-gradient(900px 620px at 50% 92%, rgba(117, 255, 216, .14), transparent 60%),
+        linear-gradient(180deg, var(--bgTop), var(--bgMid) 60%, var(--bgBot));
+}
+
+/* dreamy star dust */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: .55;
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, .20) 0 1px, transparent 2px),
+        radial-gradient(circle at 80% 10%, rgba(255, 255, 255, .18) 0 1px, transparent 2px),
+        radial-gradient(circle at 50% 70%, rgba(255, 255, 255, .12) 0 1px, transparent 2px),
+        radial-gradient(circle at 10% 85%, rgba(255, 255, 255, .14) 0 1px, transparent 2px);
+    background-size: 240px 240px;
+    filter: blur(.1px);
+    z-index: 0;
+}
+
+/* floating bubbles */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    /* ✅ no overflow */
+    pointer-events: none;
+    opacity: .55;
+    background:
+        radial-gradient(60px 60px at 15% 30%, rgba(255, 125, 216, .16), transparent 70%),
+        radial-gradient(90px 90px at 75% 25%, rgba(154, 123, 255, .16), transparent 70%),
+        radial-gradient(70px 70px at 45% 80%, rgba(117, 255, 216, .12), transparent 70%),
+        radial-gradient(80px 80px at 88% 78%, rgba(255, 227, 122, .12), transparent 70%);
+    animation: floaty 9s ease-in-out infinite;
+    z-index: 0;
+}
+
+
+@keyframes floaty {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(14px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.app {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1
+}
+
+.topbar {
+    padding: 22px 18px 10px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+    justify-content: space-between;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.brand {
+    position: relative;
+}
+
+.badgeRow {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .12);
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: #f3f6ff;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .18);
+}
+
+.badge.ghost {
+    background: rgba(255, 255, 255, .06);
+}
+
+.title {
+    margin: 10px 0 2px;
+    font-family: "Baloo 2", cursive;
+    font-size: 34px;
+    letter-spacing: .4px;
+    text-shadow: 0 12px 30px rgba(0, 0, 0, .35);
+}
+
+.subtitle {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 560px;
+}
+
+/* HUD cards */
+.hud {
+    display: flex;
+    gap: 10px
+}
+
+.stat {
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 20px;
+    padding: 10px 12px;
+    min-width: 98px;
+    text-align: right;
+    box-shadow: var(--softshadow);
+    backdrop-filter: blur(10px);
+}
+
+.label {
+    display: block;
+    color: var(--muted);
+    font-size: 12px
+}
+
+.value {
+    display: block;
+    font-weight: 1000;
+    font-size: 18px
+}
+
+/* tabs like candy pills */
+.tabs {
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 18px 12px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tab {
+    border: 1px solid rgba(255, 255, 255, .14);
+    background: rgba(255, 255, 255, .07);
+    color: var(--text);
+    border-radius: 999px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-weight: 900;
+    backdrop-filter: blur(10px);
+    transform: translateY(0);
+    transition: transform .12s ease, background .12s ease;
+}
+
+.tab:hover {
+    transform: translateY(-1px);
+}
+
+.tab.active {
+    background: linear-gradient(180deg, rgba(255, 255, 255, .18), rgba(255, 255, 255, .08));
+    box-shadow: 0 18px 35px rgba(0, 0, 0, .25);
+}
+
+.stage{
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 18px 18px;
+  overflow: hidden;
+}
+
+
+.view {
+    width: 100%;
+    max-width: 1100px
+}
+
+/* panels become glassy + cute */
+.panel {
+    background: linear-gradient(180deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .06));
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: 34px;
+    padding: 18px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(12px);
+}
+
+.panelHead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px
+}
+
+.h2 {
+    margin: 0;
+    font-family: "Baloo 2", cursive;
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.muted {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 13px
+}
+
+.row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center
+}
+
+.spread {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap
+}
+
+.pill {
+    border: 1px solid rgba(255, 255, 255, .16);
+    background: rgba(255, 255, 255, .08);
+    color: var(--text);
+    border-radius: 999px;
+    padding: 9px 14px;
+    cursor: pointer;
+    font-weight: 900;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, .18);
+    transform: translateY(0);
+    transition: transform .12s ease;
+}
+
+.pill:hover {
+    transform: translateY(-1px);
+}
+
+.pill:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+    transform: none
+}
+
+.cta {
+    border: 0;
+    border-radius: 20px;
+    cursor: pointer;
+    padding: 14px 16px 12px;
+    background: linear-gradient(180deg, rgba(255, 227, 122, .95), rgba(255, 125, 216, .82));
+    color: #1a1020;
+    font-weight: 1000;
+    letter-spacing: .4px;
+    box-shadow: 0 22px 45px rgba(255, 125, 216, .18), 0 20px 45px rgba(0, 0, 0, .35);
+    transition: transform .10s ease;
+}
+
+.cta:active {
+    transform: scale(.98)
+}
+
+.cta.small {
+    padding: 12px 16px;
+    border-radius: 18px
+}
+
+/* cards */
+/* .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px
+} */
+
+@media (max-width:980px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.card {
+    border: 1px solid rgba(255, 255, 255, .14);
+    background: rgba(255, 255, 255, .08);
+    border-radius: 26px;
+    padding: 14px;
+    box-shadow: var(--softshadow);
+    backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    background: radial-gradient(200px 150px at 20% 20%, rgba(255, 227, 122, .10), transparent 60%),
+        radial-gradient(200px 150px at 80% 10%, rgba(154, 123, 255, .12), transparent 60%);
+    pointer-events: none;
+}
+
+.cardTop {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px
+}
+
+.bigIcon {
+    width: 58px;
+    height: 58px;
+    border-radius: 22px;
+    display: grid;
+    place-items: center;
+    background: rgba(0, 0, 0, .18);
+    border: 1px solid rgba(255, 255, 255, .12);
+    font-size: 28px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .28);
+}
+
+/* rarity tags become candy */
+.tag {
+    position: relative;
+    display: inline-flex;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 1000;
+    font-size: 12px;
+    border: 1px solid rgba(255, 255, 255, .16);
+    backdrop-filter: blur(10px);
+}
+
+.tag.common {
+    background: linear-gradient(90deg, rgba(75, 82, 104, .50), rgba(43, 47, 61, .45));
+}
+
+.tag.rare {
+    background: linear-gradient(90deg, rgba(154, 123, 255, .70), rgba(106, 76, 255, .55));
+}
+
+.tag.mythic {
+    background: linear-gradient(90deg, rgba(255, 125, 216, .70), rgba(255, 77, 216, .55));
+}
+
+.tag.ultra {
+    background: linear-gradient(90deg, rgba(255, 227, 122, .90), rgba(255, 125, 216, .65));
+    color: #1a1020;
+}
+
+/* ===== Chibi Lumo bubble ===== */
+.lumoBubble {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.lumoFace {
+    width: 62px;
+    height: 62px;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, .16);
+    background:
+        radial-gradient(18px 18px at 30% 30%, rgba(255, 255, 255, .26), transparent 60%),
+        linear-gradient(180deg, rgba(154, 123, 255, .55), rgba(255, 125, 216, .45));
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .30);
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.lumoFace::before {
+    content: "";
+    position: absolute;
+    left: 18px;
+    top: 26px;
+    width: 7px;
+    height: 7px;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, .92);
+    box-shadow: 20px 0 0 rgba(255, 255, 255, .92);
+}
+
+.lumoFace::after {
+    content: "";
+    position: absolute;
+    left: 25px;
+    top: 40px;
+    width: 14px;
+    height: 8px;
+    border-radius: 0 0 12px 12px;
+    border: 2px solid rgba(255, 255, 255, .80);
+    border-top: 0;
+    opacity: .9;
+}
+
+.lumoWiggle {
+    animation: wiggle 2.4s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-3px) rotate(-2deg);
+    }
+}
+
+/* ===== Timing Bar becomes magical ===== */
+.barWrap {
+    margin-top: 10px;
+    background: rgba(255, 255, 255, .07);
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: 26px;
+    padding: 14px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .25);
+}
+
+.skillLabel {
+    position: relative;
+    display: flex;
+    font-size: 8px;
+    font-weight: 900;
+    color: var(--muted);
+    margin-bottom: 12px;
+}
+
+.skillLabel span {
+    position: absolute;
+    transform: translateX(-50%);
+}
+
+.skillLabel span:nth-child(1) {
+    left: 27.5%;
+}
+
+/* Common */
+.skillLabel span:nth-child(2) {
+    left: 69%;
+}
+
+/* Rare */
+.skillLabel span:nth-child(3) {
+    left: 88%;
+}
+
+/* Mythic */
+.skillLabel span:nth-child(4) {
+    left: 96.5%;
+}
+
+/* Ultra */
+
+.barContainer {
+    position: relative;
+    height: 30px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, .22);
+    border: 1px solid rgba(255, 255, 255, .12);
+}
+
+.zone {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+}
+
+.zone-common {
+    left: 0;
+    width: 62%;
+    background: linear-gradient(90deg, #5c607a, #3b3f54);
+}
+
+.zone-rare {
+    left: 62%;
+    width: 23%;
+    background: linear-gradient(90deg, #9a7bff, #6a4cff);
+}
+
+.zone-myth {
+    left: 85%;
+    width: 10%;
+    background: linear-gradient(90deg, #ff7dd8, #ff4dd8);
+}
+
+.zone-ultra {
+    right: 0;
+    width: 5%;
+    background: linear-gradient(90deg, #ffe37a, #ffb347);
+}
+
+.needle {
+    position: absolute;
+    top: -11px;
+    width: 12px;
+    height: 52px;
+    border-radius: 8px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, .55));
+    box-shadow: 0 0 20px rgba(255, 255, 255, .75);
+    left: 0;
+}
+
+.shine {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .18), transparent);
+    transform: translateX(-60%);
+    animation: shine 1.1s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes shine {
+    to {
+        transform: translateX(60%);
+    }
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .55);
+    z-index: 40
+}
+
+.modal {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(740px, 92vw);
+    max-height: min(80vh, 760px);
+    overflow: auto;
+    z-index: 50;
+}
+
+.hidden {
+    display: none !important
+}
+
+.fx {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 60
+}
+
+
+/* =========================
+   CENTERED GACHA MACHINE UI
+========================= */
+
+.stage {
+    height: calc(100vh - 180px);
+    /* header + tabs */
+    overflow: hidden;
+}
+
+.machineScreen{
+  height: calc(100vh - 220px); /* header + tabs */
+  max-height: 720px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:20px;
+  position:relative;
+}
+
+/* Floating Lumo */
+.lumoFloat {
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+
+/* Machine body */
+.gachaMachine {
+    width: 320px;
+    max-width: 90vw;
+    background:
+        radial-gradient(circle at 50% 20%, rgba(255, 255, 255, .25), transparent 60%),
+        linear-gradient(180deg, rgba(154, 123, 255, .45), rgba(255, 125, 216, .35));
+    border-radius: 36px;
+    padding: 18px 16px 22px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, .45);
+    border: 1px solid rgba(255, 255, 255, .18);
+    text-align: center;
+}
+
+/* Machine top */
+.machineTitle {
+    font-family: "Baloo 2", cursive;
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.machineSub {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+/* Capsule window */
+.capsuleWindow {
+    margin: 14px auto;
+    height: 90px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, .18);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 28px;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, .35);
+}
+
+/* STOP button */
+.machineBar {
+    margin-top: 8px;
+}
+
+.stopButton {
+    margin-top: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 999px;
+    padding: 14px 0;
+    font-size: 18px;
+    font-weight: 900;
+    color: #1a1020;
+    background: linear-gradient(180deg, #ffe37a, #ff7dd8);
+    box-shadow: 0 18px 40px rgba(255, 125, 216, .35);
+}
+
+.stopButton:active {
+    transform: scale(.97);
+}
+
+/* Bottom actions */
+
+.roundBtn {
+    min-width: 120px;
+    border: none;
+    border-radius: 18px;
+    padding: 12px 16px;
+    font-weight: 900;
+    background: rgba(255, 255, 255, .14);
+    color: var(--text);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .25);
+    transition: transform .1s ease;
+}
+
+.roundBtn.glow {
+    background: linear-gradient(180deg, rgba(154, 123, 255, .85), rgba(255, 125, 216, .75));
+}
+
+.roundBtn:hover {
+    transform: translateY(-1px);
+}
+
+
+/* Last pull text */
+.lastPullText {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+}
+
+
+/* =========================================
+   GACHA "CAPSULE POP" REVEAL (MODAL MOMENT)
+========================================= */
+
+.capsulePop .panelHead {
+    margin-bottom: 12px;
+}
+
+.capsuleStage {
+    position: relative;
+    padding: 18px 8px 6px;
+    border-radius: 28px;
+    background: rgba(0, 0, 0, .16);
+    border: 1px solid rgba(255, 255, 255, .12);
+    overflow: hidden;
+}
+
+.capsuleStage::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    background:
+        radial-gradient(260px 180px at 20% 15%, rgba(154, 123, 255, .18), transparent 65%),
+        radial-gradient(240px 180px at 80% 10%, rgba(255, 125, 216, .14), transparent 65%),
+        radial-gradient(260px 220px at 50% 90%, rgba(117, 255, 216, .10), transparent 70%);
+    pointer-events: none;
+}
+
+.aura {
+    position: absolute;
+    left: 50%;
+    top: 28px;
+    width: 260px;
+    height: 260px;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    filter: blur(2px);
+    opacity: .9;
+    pointer-events: none;
+    animation: auraPulse 1.6s ease-in-out infinite;
+    mix-blend-mode: screen;
+}
+
+@keyframes auraPulse {
+
+    0%,
+    100% {
+        transform: translateX(-50%) scale(1);
+        opacity: .75;
+    }
+
+    50% {
+        transform: translateX(-50%) scale(1.06);
+        opacity: 1;
+    }
+}
+
+.aura.common {
+    background: radial-gradient(circle, rgba(255, 255, 255, .14), transparent 60%);
+}
+
+.aura.rare {
+    background: radial-gradient(circle, rgba(154, 123, 255, .32), transparent 62%);
+}
+
+.aura.mythic {
+    background: radial-gradient(circle, rgba(255, 125, 216, .32), transparent 62%);
+}
+
+.aura.ultra {
+    background: radial-gradient(circle, rgba(255, 227, 122, .40), transparent 62%);
+}
+
+.capsuleRow {
+    position: relative;
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 14px;
+    align-items: center;
+}
+
+@media (max-width:640px) {
+    .capsuleRow {
+        grid-template-columns: 1fr;
+    }
+}
+
+.capsuleArt {
+    width: 150px;
+    height: 150px;
+    border-radius: 30px;
+    display: grid;
+    place-items: center;
+    background:
+        radial-gradient(40px 40px at 30% 25%, rgba(255, 255, 255, .22), transparent 65%),
+        linear-gradient(180deg, rgba(255, 255, 255, .10), rgba(0, 0, 0, .20));
+    border: 1px solid rgba(255, 255, 255, .14);
+    box-shadow: 0 22px 60px rgba(0, 0, 0, .35);
+    font-size: 64px;
+    margin: 0 auto;
+    animation: popIn .22s ease-out both;
+}
+
+@keyframes popIn {
+    from {
+        transform: scale(.86);
+        opacity: .2;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.itemCardCute {
+    border-radius: 26px;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, .14);
+    background: rgba(255, 255, 255, .08);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, .28);
+    backdrop-filter: blur(12px);
+}
+
+.itemName {
+    margin: 0;
+    font-family: "Baloo 2", cursive;
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.1;
+}
+
+.itemDesc {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* =========================================
+   MACHINE: MORE DEPTH + "TOY" FEEL
+========================================= */
+
+.gachaMachine::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: 36px;
+    background:
+        radial-gradient(420px 220px at 30% 0%, rgba(255, 255, 255, .18), transparent 60%),
+        radial-gradient(260px 220px at 80% 10%, rgba(255, 227, 122, .10), transparent 60%);
+    pointer-events: none;
+}
+
+.gachaMachine::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -20px;
+    width: 260px;
+    height: 52px;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, .25);
+    filter: blur(12px);
+    opacity: .6;
+    pointer-events: none;
+}
+
+/* Add a bezel to the capsule window */
+.capsuleWindow {
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, .12);
+}
+
+.capsuleWindow::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, .10);
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, .22);
+    pointer-events: none;
+}
+
+.capsuleWindow::after {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    width: 70px;
+    height: 24px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .08);
+    filter: blur(1px);
+    pointer-events: none;
+}
+
+/* Make barWrap match machineBar (so it feels integrated) */
+.machineBar .barWrap {
+    margin-top: 12px;
+}
+
+/* Hard-clip everything inside the bar */
+#bar-container,
+.barContainer {
+    overflow: hidden;
+    position: relative;
+}
+
+/* Make needle stay fully inside bar height */
+.needle {
+    top: 2px !important;
+    height: 26px !important;
+    /* match bar height-ish */
+    box-shadow: 0 0 10px rgba(255, 255, 255, .45) !important;
+    border: 1px solid rgba(255, 255, 255, .35);
+}
+
+/* Optional: reduce "blocky" white by using a softer gradient */
+.needle {
+    background: linear-gradient(180deg, rgba(255, 255, 255, .95), rgba(255, 255, 255, .35)) !important;
+}
+
+/* =========================================
+   MOBILE-GAME BUTTON DOCK FEEL
+========================================= */
+
+@media (max-width:520px) {
+    .roundBtn {
+        min-width: auto;
+        padding: 12px 14px;
+        font-size: 13px;
+    }
+}
+
+/* Button press feel */
+.roundBtn:active,
+.pill:active {
+    transform: scale(.98);
+}
+
+/* =========================================
+   SMALL UX IMPROVEMENTS (LESS BLOCKY)
+========================================= */
+
+/* Grid becomes flexible instead of harsh 4 columns */
+.grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+/* Modal scroll looks nicer */
+.modal {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, .25) transparent;
+}
+
+/* Lumo beside machine */
+.machineRow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.lumoSide {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 10px;
+}
+
+.lumoText {
+    position: relative;
+}
+
+.lumoText::after {
+    content: "";
+    position: absolute;
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent rgba(255, 255, 255, .14) transparent transparent;
+}
+
+
+.machineActions {
+    margin-top: 12px;
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    padding: 10px 14px;
+
+    background: rgba(255, 255, 255, .06);
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 26px;
+
+    box-shadow: 0 18px 45px rgba(0, 0, 0, .30);
+    backdrop-filter: blur(12px);
+}
+
+
+@media (max-width:720px) {
+    .machineRow {
+        flex-direction: column;
+    }
+}
+
+@keyframes machineShake {
+    0% {
+        transform: translate(0, 0)
+    }
+
+    25% {
+        transform: translate(-4px, 2px)
+    }
+
+    50% {
+        transform: translate(4px, -2px)
+    }
+
+    75% {
+        transform: translate(-2px, 1px)
+    }
+
+    100% {
+        transform: translate(0, 0)
+    }
+}
+
+.gachaMachine.shake {
+    animation: machineShake .35s ease;
+}
+
+.capsuleDrop {
+    position: absolute;
+    top: -120px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 64px;
+    animation: dropCapsule .6s ease forwards;
+    pointer-events: none;
+}
+
+@keyframes dropCapsule {
+    0% {
+        transform: translate(-50%, -120px) scale(.6);
+        opacity: 0
+    }
+
+    70% {
+        transform: translate(-50%, 60px) scale(1.05);
+        opacity: 1
+    }
+
+    100% {
+        transform: translate(-50%, 40px) scale(1);
+    }
+}
+
+.capsuleRoll {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 26px;
+    animation: rollCaps 0.6s linear infinite;
+}
+
+@keyframes rollCaps {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-24px);
+    }
+}
+
+.towerBg {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+    height: 0;
+    background:
+        linear-gradient(180deg, rgba(255, 227, 122, .18), rgba(255, 125, 216, .08));
+    border-radius: 18px 18px 0 0;
+    opacity: .35;
+    transition: height .6s ease;
+    z-index: -1;
+}
+
+/* =========================
+   LOADING / OWNERSHIP SCREEN
+========================= */
+.loadingScreen {
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(600px 360px at 50% 40%, rgba(154, 123, 255, .35), transparent 70%),
+        linear-gradient(180deg, #0b1022, #07070a);
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+}
+
+.loadingScreen.hide {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .6s ease;
+}
+
+.loadingInner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.ownerText {
+    display: flex;
+    gap: 12px;
+    font-family: "Baloo 2", cursive;
+    font-size: 46px;
+    font-weight: 900;
+    letter-spacing: 6px;
+}
+
+.ownerText span {
+    animation: floatChar 2.2s ease-in-out infinite;
+}
+
+.ownerText span:nth-child(2) {
+    animation-delay: .15s
+}
+
+.ownerText span:nth-child(3) {
+    animation-delay: .3s
+}
+
+@keyframes floatChar {
+
+    0%,
+    100% {
+        transform: translateY(0)
+    }
+
+    50% {
+        transform: translateY(-10px)
+    }
+}
+
+.loadingSub {
+    font-size: 16px;
+    color: #dcdfff;
+    opacity: .9;
+}
+
+.loadingHint {
+    font-size: 13px;
+    color: #b9c2e8;
+    opacity: .8;
+}
+
+.gachaMachine {
+    transform-style: preserve-3d;
+    animation: idleFloat 4s ease-in-out infinite;
+}
+
+@keyframes idleFloat {
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    50% {
+        transform: translateY(-6px) scale(1.01);
+    }
+}
+
+.mgPlayfield {
+    position: relative;
+    height: 160px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, .18);
+    border: 1px solid rgba(255, 255, 255, .14);
+    overflow: hidden;
+}
+
+.mgSafeZone {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 140px;
+    height: 100%;
+    transform: translateX(-50%);
+    background: rgba(117, 255, 216, .18);
+    border-left: 2px dashed rgba(117, 255, 216, .45);
+    border-right: 2px dashed rgba(117, 255, 216, .45);
+}
+
+.mgLantern {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 42px;
+    pointer-events: none;
+    transition: transform .04s linear;
+}
+
+/* ===== Cosmetic: Night Market Theme ===== */
+body.themeNight {
+    background:
+        radial-gradient(900px 520px at 20% 15%, rgba(0, 255, 170, .10), transparent 60%),
+        radial-gradient(920px 520px at 80% 0%, rgba(255, 80, 200, .18), transparent 58%),
+        radial-gradient(900px 620px at 50% 92%, rgba(120, 120, 255, .14), transparent 60%),
+        linear-gradient(180deg, #070a18, #0b1030 60%, #05040a);
+}
+
+/* ===== Cosmetic: Ribbon Capsule Skin ===== */
+.itemCardCute.ribbonSkin {
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, .20);
+}
+
+.itemCardCute.ribbonSkin::before {
+    content: "🎀";
+    position: absolute;
+    top: -10px;
+    right: 12px;
+    font-size: 22px;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, .35));
+}
+
+/* ===== Cosmetic: Sparkle Trail (subtle polish) ===== */
+body.trailSparkle .gachaMachine {
+    box-shadow: 0 30px 80px rgba(0, 0, 0, .45), 0 0 55px rgba(255, 125, 216, .08);
+}
+
+/* Theme: Sunrise */
+body.themeSunrise {
+    background:
+        radial-gradient(900px 520px at 20% 15%, rgba(255, 190, 120, .18), transparent 60%),
+        radial-gradient(920px 520px at 80% 0%, rgba(255, 125, 216, .16), transparent 58%),
+        radial-gradient(900px 620px at 50% 92%, rgba(117, 255, 216, .10), transparent 60%),
+        linear-gradient(180deg, #120b22, #1a1642 60%, #07070a);
+}
+
+/* Glass+ UI polish */
+body.uiGlassPlus .panel,
+body.uiGlassPlus .card,
+body.uiGlassPlus .stat {
+    background: linear-gradient(180deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, .07));
+    border: 1px solid rgba(255, 255, 255, .18);
+    backdrop-filter: blur(10px);
+}
+
+/* Capsule Window Glow */
+.capsuleWindow.glow {
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, .35), 0 0 28px rgba(154, 123, 255, .22);
+    border: 1px solid rgba(255, 255, 255, .18);
+}
+
+.tapField {
+    position: relative;
+    height: 280px;
+    border-radius: 26px;
+    background: rgba(0, 0, 0, .18);
+    border: 1px solid rgba(255, 255, 255, .12);
+    overflow: hidden;
+}
+
+.tapLantern {
+    position: absolute;
+    border: none;
+    background: rgba(255, 255, 255, .10);
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: 18px;
+    padding: 10px 12px;
+    font-size: 26px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transform: translate(-50%, -50%);
+}
+
+.tapLantern:active {
+    transform: translate(-50%, -50%) scale(.95);
+}
+
+/* .panel {
+    display: none !important;
+} */
+
+.tapEffect {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    background: radial-gradient(circle, rgba(255, 255, 255, .25), transparent 60%);
+    animation: tapPulse .6s ease-out forwards;
+    pointer-events: none;
+}
+
+.tapField{
+  position:relative;
+  height:280px;
+  border-radius:26px;
+  background: rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.12);
+  overflow:hidden;
+}
+
+.tapLantern{
+  position:absolute;
+  border:none;
+  background: rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:18px;
+  padding:10px 12px;
+  font-size:26px;
+  cursor:pointer;
+  backdrop-filter: blur(8px);
+  transform: translate(-50%, -50%);
+}
+
+.tapLantern:active{
+  transform: translate(-50%, -50%) scale(.95);
+}
+
+/* =========================
+   COLLECTION — STICKER BOOK
+========================= */
+
+.collectionGrid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap:14px;
+}
+
+/* base card */
+.collectItem{
+  position:relative;
+  border-radius:26px;
+  padding:14px 12px 12px;
+  background: rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow: 0 18px 45px rgba(0,0,0,.28);
+  backdrop-filter: blur(12px);
+  overflow:hidden;
+  cursor:default;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.collectItem:hover{
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 26px 60px rgba(0,0,0,.38);
+}
+
+/* rarity glow layer */
+.collectGlow{
+  position:absolute;
+  inset:-1px;
+  border-radius:26px;
+  opacity:.85;
+  pointer-events:none;
+}
+
+.collectItem.common .collectGlow{
+  background: radial-gradient(180px 120px at 30% 20%, rgba(255,255,255,.10), transparent 60%);
+}
+.collectItem.rare .collectGlow{
+  background: radial-gradient(200px 140px at 30% 20%, rgba(154,123,255,.35), transparent 65%);
+}
+.collectItem.mythic .collectGlow{
+  background: radial-gradient(220px 160px at 30% 20%, rgba(255,125,216,.35), transparent 65%);
+}
+.collectItem.ultra .collectGlow{
+  background: radial-gradient(240px 180px at 30% 20%, rgba(255,227,122,.45), transparent 65%);
+}
+
+/* icon */
+.collectIcon{
+  font-size:42px;
+  display:grid;
+  place-items:center;
+  margin-bottom:6px;
+}
+
+/* info */
+.collectInfo{
+  text-align:center;
+}
+.collectName{
+  font-weight:1000;
+  font-size:14px;
+}
+.collectDesc{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.3;
+  margin-top:2px;
+}
+
+/* footer */
+.collectFooter{
+  margin-top:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.collectCount{
+  font-weight:1000;
+  font-size:13px;
+  opacity:.9;
+}
+
+.newBadge{
+  position:absolute;
+  top:8px;
+  right:10px;
+  background: linear-gradient(90deg, #ffe37a, #ff7dd8);
+  color:#1a1020;
+  font-size:10px;
+  font-weight:900;
+  padding:4px 6px;
+  border-radius:999px;
+  box-shadow: 0 6px 14px rgba(0,0,0,.35);
+}
+
+@keyframes tapPulse{
+  to{
+    transform: translate(-50%, -50%) scale(2);
+    opacity:0;
+  }
+}
+
+body.themeNight{
+  filter: saturate(1.1) contrast(1.05);
+}
+
+body.themeSunrise{
+  filter: saturate(1.15) contrast(1.1);
+}
+
+body.trailSparkle .capsuleDrop{
+  text-shadow: 0 0 18px rgba(255,227,122,.8);
+}
+
+body.skinRibbon .capsuleArt::after{
+  content:"🎀";
+  position:absolute;
+  top:-8px;
+  right:-6px;
+  font-size:24px;
+}

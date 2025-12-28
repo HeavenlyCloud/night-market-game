@@ -1,22 +1,24 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gachapon Globe: Taiwan Treasures</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <div id="app" class="app">
+  <div class="app">
     <header class="topbar">
       <div class="brand">
         <div class="badgeRow">
-          <span class="badge">GACHAPON GLOBE</span>
+          <!-- <span class="badge">GACHAPON GLOBE</span>
           <span id="regionBadge" class="badge ghost">Region: Taiwan</span>
-          <span id="streakBadge" class="badge ghost">Streak: 0</span>
+          <span id="streakBadge" class="badge ghost">Streak: 0</span> -->
         </div>
         <h1 class="title">Taiwan Treasures</h1>
-        <p id="lumoLine" class="subtitle">Pull capsules to rebuild the floating Tower.</p>
+        <p id="lumoLine" class="subtitle">Stop the needle → crack the capsule → collect the memory.</p>
       </div>
 
       <div class="hud">
@@ -29,18 +31,40 @@
       <button class="tab active" data-route="machine">Machine</button>
       <button class="tab" data-route="collection">Collection</button>
       <button class="tab" data-route="scenes">Scenes</button>
-      <button class="tab" data-route="minigames">Mini-Games</button>
+      <button class="tab" data-route="minigame">Mini-Game</button>
       <button class="tab" data-route="shop">Shop</button>
       <button class="tab" data-route="settings">Settings</button>
     </nav>
 
     <main class="stage">
       <section id="view" class="view"></section>
+
+      <!-- Modal -->
       <div id="overlay" class="overlay hidden"></div>
+      <div id="modal" class="modal hidden" role="dialog" aria-label="Modal"></div>
+
+      <!-- FX -->
       <canvas id="fx" class="fx"></canvas>
     </main>
   </div>
 
-  <script type="module" src="js/app.js"></script>
+  <!-- LOADING / OWNERSHIP SCREEN -->
+  <div id="loadingScreen" class="loadingScreen" aria-hidden="true">
+    <div class="loadingInner">
+      <div class="lumoFace lumoWiggle"></div>
+
+      <div class="ownerText">
+        <span>宇</span><span>天</span><span>云</span>
+      </div>
+
+      <div class="loadingSub">Gachapon Globe</div>
+      <div class="loadingHint">Loading memories…</div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
 </body>
+
+</div>
+
 </html>
