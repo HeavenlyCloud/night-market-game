@@ -26,6 +26,7 @@ window.addEventListener("load", () => {
       pityMythic: 0,
       pityUltra: 0,
       activeCosmeticIds: [],
+      activeCosmetics: {},
       ownedCosmetics: {}
     },
     currencies: { coins: 0 },
@@ -38,9 +39,6 @@ window.addEventListener("load", () => {
   let S = loadSave() ?? defaultState();
   normalizeState();
 
-  // =========================
-  // SFX (safe init - AFTER S exists)
-  // =========================
   const SFX = {
     click: new Audio("sounds/click_001.ogg"),
     stop: new Audio("sounds/confirmation_001.ogg"),
@@ -78,6 +76,7 @@ window.addEventListener("load", () => {
     S.tower ??= { xp: 0, level: 1 };
     S.collection ??= { owned: {} };
     S.collection.owned ??= {};
+    S.collection.seen ??= {};
     S.unlocks ??= { scenes: {} };
     S.unlocks.scenes ??= {};
     S.minigame ??= { best: 0 };
@@ -91,23 +90,19 @@ window.addEventListener("load", () => {
   }
 
   function applyCosmetics() {
-    // Apply CSS toggles
-    document.body.classList.toggle("themeNight", hasCosmetic("theme_night"));
-    document.body.classList.toggle("trailSparkle", hasCosmetic("trail_sparkle"));
-    document.body.classList.toggle("skinRibbon", hasCosmetic("skin_ribbon"));
-    document.body.classList.toggle("themeSunrise", hasCosmetic("theme_sunrise"));
-    document.body.classList.toggle("uiGlassPlus", hasCosmetic("ui_glassplus"));
-    document.body.classList.toggle("sfxChimes", hasCosmetic("sfx_chimes"));
-    document.body.classList.toggle("confettiBoost", hasCosmetic("confetti_boost"));
-    document.body.classList.toggle("capsuleGlow", hasCosmetic("capsule_window_fx"));
-  const b = document.body;
-  b.classList.toggle("themeNight", !!S.meta.activeCosmetics["theme_night"]);
-  b.classList.toggle("trailSparkle", !!S.meta.activeCosmetics["trail_sparkle"]);
-  b.classList.toggle("skinRibbon", !!S.meta.activeCosmetics["skin_ribbon"]);
-  b.classList.toggle("themeSunrise", !!S.meta.activeCosmetics["theme_sunrise"]);
+    const a = S.meta.activeCosmetics || {};
+    const b = document.body;
 
-
+    b.classList.toggle("themeNight", !!a["theme_night"]);
+    b.classList.toggle("trailSparkle", !!a["trail_sparkle"]);
+    b.classList.toggle("skinRibbon", !!a["skin_ribbon"]);
+    b.classList.toggle("themeSunrise", !!a["theme_sunrise"]);
+    b.classList.toggle("uiGlassPlus", !!a["ui_glassplus"]);
+    b.classList.toggle("sfxChimes", !!a["sfx_chimes"]);
+    b.classList.toggle("confettiBoost", !!a["confetti_boost"]);
+    b.classList.toggle("capsuleGlow", !!a["capsule_window_fx"]);
   }
+
 
   S.minigame.tapBest ??= 0;
 
@@ -145,8 +140,8 @@ window.addEventListener("load", () => {
         el.remove();
       };
       field.appendChild(el);
-      setTimeout(() => el.remove(), 700);
-    }, 220);
+      setTimeout(() => el.remove(), 600);
+    }, 800);
 
     // timer
     tapTimer = setInterval(() => {
@@ -200,6 +195,11 @@ window.addEventListener("load", () => {
   const modal = $("#modal");
   const fx = $("#fx");
   const fxCtx = fx.getContext("2d");
+
+  function renderPity() {
+    safeText("#pityM", `Pity M: ${S.meta.pityMythic ?? 0}/${D.banner.pity.mythicAt}`);
+    safeText("#pityU", `Pity U: ${S.meta.pityUltra ?? 0}/${D.banner.pity.ultraAt}`);
+  }
 
   function safeText(id, value) {
     const el = $(id);
@@ -479,8 +479,9 @@ window.addEventListener("load", () => {
     if (!win) return;
 
     win.innerHTML = `<div class="capsuleRoll">
-    ${D.items.slice(0, 5).map(i => i.icon).join("")}
-  </div>`;
+  ${D.items.sort(() => Math.random() - 0.5).slice(0, 10).map(i => i.icon).join(" ")}
+</div>`;
+
   }
 
   function stopCapsuleRoll(finalIcon) {
@@ -730,6 +731,11 @@ window.addEventListener("load", () => {
     const claimBtn = document.getElementById("mgClaim");
     const field = document.getElementById("mgField");
 
+    window.onmousemove = (e) => mgPointerMove(e.clientX);
+    window.ontouchmove = (e) => {
+      if (e.touches?.length) mgPointerMove(e.touches[0].clientX);
+    };
+
     // if minigame UI isn't on screen, stop timers safely
     if (!startBtn || !claimBtn || !field) {
       if (typeof mgRunning !== "undefined" && mgRunning) mgEnd(false);
@@ -808,6 +814,7 @@ window.addEventListener("load", () => {
     safeText("#towerLevel", String(S.tower.level));
     safeText("#regionBadge", `Region: ${cap(S.meta.activeRegionId)}`);
     safeText("#streakBadge", `Streak: ${S.meta.streak ?? 0}`);
+    renderPity();
   }
 
   function panel(title, subtitle, rightHtml, bodyHtml) {
@@ -870,9 +877,10 @@ window.addEventListener("load", () => {
             <button class="stopButton" id="stopBtn">STOP</button>
 
             <div class="machineMeta">
-              <span class="tag common">Pity M: ${S.meta.pityMythic ?? 0}/${D.banner.pity.mythicAt}</span>
-              <span class="tag rare">Pity U: ${S.meta.pityUltra ?? 0}/${D.banner.pity.ultraAt}</span>
+              <span class="tag common" id="pityM">Pity M: 0/${D.banner.pity.mythicAt}</span>
+              <span class="tag rare"   id="pityU">Pity U: 0/${D.banner.pity.ultraAt}</span>
             </div>
+
           </div>
         </div>
 
@@ -887,6 +895,7 @@ window.addEventListener("load", () => {
   }
 
   function renderCollection() {
+    const isNew = !S.collection.seen[id];
     const entries = Object.entries(S.collection.owned);
     const total = entries.reduce((a, [, c]) => a + c, 0);
 
@@ -1033,6 +1042,7 @@ window.addEventListener("load", () => {
       const owned = !!S.meta.ownedCosmetics[c.id];
       const active = !!S.meta.activeCosmetics[c.id];
       const canBuy = (!owned && S.currencies.coins >= c.cost);
+      const cls = active ? "activeCosmetic" : "";
 
       return `
       <div class="card">
@@ -1133,12 +1143,8 @@ window.addEventListener("load", () => {
     mgBind();
 
     if (S.route === "machine") startBar(); else stopBar();
+    if (S.route === "machine") updateTowerVisual();
   }
-
-  function applyCosmetics() {
-    document.body.classList.toggle("themeNight", !!S.meta.activeCosmetics["theme_night"]);
-  }
-
 
   function shakeMachine() {
     const m = document.querySelector(".gachaMachine");
@@ -1198,7 +1204,6 @@ window.addEventListener("load", () => {
         if (win && hasCosmetic("capsule_window_fx")) win.classList.add("glow");
         setTimeout(() => win && win.classList.remove("glow"), 600);
 
-
         const res = pullOnce(tier);
         if (res.rarity === "Ultra" || res.rarity === "Mythic") {
           playSfx("rare");
@@ -1210,6 +1215,7 @@ window.addEventListener("load", () => {
           playSfx("rare");
         }
 
+        stopCapsuleRoll(it.icon);
 
         safeText("#lastPull", `You hit ${tier}! ${it.name} (${res.rarity}) +${res.coins}c`);
         renderHud();
@@ -1253,53 +1259,13 @@ window.addEventListener("load", () => {
       };
     });
 
-    function tapBind() {
-      const startBtn = document.getElementById("tapStart");
-      const claimBtn = document.getElementById("tapClaim");
-      const field = document.getElementById("tapField");
 
-      // If minigames screen isn't mounted, stop safely
-      if (!startBtn || !claimBtn || !field) {
-        if (tapRunning) tapReset();
-        return;
-      }
-
-      startBtn.onclick = tapStart;
-      claimBtn.onclick = tapClaim;
-
-      if (!tapReward) claimBtn.disabled = true;
-    }
 
 
     // Minigame
 
-    function renderMinigameTap() {
-      return panel(
-        "Lantern Rush",
-        "Tap lanterns quickly before time runs out!",
-        `<span class="tag rare">Best: ${S.minigame.tapBest || 0}</span>`,
-        `
-      <div class="spread">
-        <div class="row">
-          <button class="cta small" id="tapStart">Start</button>
-          <button class="pill" id="tapClaim" disabled>Claim</button>
-        </div>
-        <div class="row">
-          <span class="tag common">Score: <b id="tapScore">0</b></span>
-          <span class="tag rare">Time: <b id="tapTime">8</b>s</span>
-          <span class="tag mythic">Reward: <b id="tapReward">—</b></span>
-        </div>
-      </div>
-
-      <div style="height:12px"></div>
-
-      <div class="tapField" id="tapField"></div>
-      <p class="muted">Tap the lanterns as they appear.</p>
-    `
-      );
-    }
-
-
+    if (tapStartBtn) tapStartBtn.onclick = tapStart;
+    if (tapClaimBtn) tapClaimBtn.onclick = tapClaim;
 
     const mgHow = $("#mgHow");
     if (mgHow) mgHow.onclick = () => alert(
