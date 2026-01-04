@@ -36,8 +36,11 @@ window.addEventListener("load", () => {
     minigame: { best: 0 }
   });
 
+
   let S = loadSave() ?? defaultState();
   normalizeState();
+  S.route = "machine"; // 👈 force start screen
+
 
   const CONFETTI_COLORS = [
     "#ffe37a", // gold
@@ -760,25 +763,38 @@ window.addEventListener("load", () => {
   // Scene Viewer
   // =========================
   function sceneArtStyle(theme) {
-    if (theme === "taipei") return `
-      background:
-        radial-gradient(220px 180px at 25% 25%, rgba(255,204,0,.12), transparent 70%),
-        radial-gradient(240px 200px at 78% 20%, rgba(106,76,255,.22), transparent 70%),
-        linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.24));
-    `;
-    if (theme === "jiufen") return `
-      background:
-        radial-gradient(220px 180px at 25% 25%, rgba(255,90,120,.14), transparent 70%),
-        radial-gradient(240px 200px at 78% 20%, rgba(255,204,0,.14), transparent 70%),
-        linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.24));
-    `;
+  const map = {
+    taipei: "/images/scene_taipei101.jpg",
+    jiufen: "/images/scene_jiufen.jpg",
+    taroko: "/images/scene_taroko.jpg"
+  };
+
+  const img = map[theme];
+
+  if (!img) {
+    console.warn("Missing scene image for theme:", theme);
     return `
-      background:
-        radial-gradient(220px 180px at 25% 25%, rgba(0,200,255,.12), transparent 70%),
-        radial-gradient(240px 200px at 78% 20%, rgba(106,76,255,.18), transparent 70%),
-        linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.24));
+      background: linear-gradient(
+        180deg,
+        rgba(20, 22, 40, 0.4),
+        rgba(10, 12, 25, 0.7)
+      );
     `;
   }
+
+  return `
+    background-image:
+      linear-gradient(
+        rgba(10, 12, 25, 0.35),
+        rgba(10, 12, 25, 0.65)
+      ),
+      url("${img}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  `;
+}
+
 
   function dropCapsule(icon = "🫧") {
     const m = document.querySelector(".gachaMachine");
@@ -794,13 +810,12 @@ window.addEventListener("load", () => {
     setTimeout(() => c.remove(), 700);
   }
 
-
   function openSceneModal(sceneId) {
     const sc = D.scenes.find(x => x.id === sceneId);
     if (!sc) return;
 
     openModal(`
-      <div class="panel">
+      <div class="panel scenePanel">
         <div class="panelHead">
           <div>
             <h2 class="h2">${sc.title}</h2>
