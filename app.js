@@ -304,39 +304,113 @@ window.addEventListener("load", () => {
   window.addEventListener("resize", resizeFx);
   resizeFx();
 
+  // =========================
+  // DRAMATIC CONFETTI FX
+  // =========================
   let confetti = [];
-  function launchConfetti() {
 
+  function launchConfetti(rarity = "Mythic") {
     confetti = [];
-    const count = hasCosmetic("confetti_boost") ? 220 : 140;
+
+    const isUltra = rarity === "Ultra";
+    const baseCount = hasCosmetic("confetti_boost") ? 220 : 150;
+    const count = isUltra ? baseCount + 120 : baseCount;
+
+    const spread = isUltra ? 16 : 10;
+    const gravity = isUltra ? 0.32 : 0.26;
+
     for (let i = 0; i < count; i++) {
       confetti.push({
         x: window.innerWidth / 2,
-        y: 150,
-        vx: (Math.random() - 0.5) * 10,
-        vy: Math.random() * -10 - 4,
-        g: 0.25 + Math.random() * 0.2,
-        s: 4 + Math.random() * 4,
-        a: 1
+        y: 160,
+
+        vx: (Math.random() - 0.5) * spread,
+        vy: Math.random() * -14 - 6,
+
+        g: gravity + Math.random() * 0.15,
+
+        size: 4 + Math.random() * (isUltra ? 6 : 4),
+        rot: Math.random() * Math.PI,
+        rotSpd: (Math.random() - 0.5) * 0.25,
+
+        shape: Math.random() < 0.6 ? "rect" : "circle",
+        color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+
+        alpha: 1,
+        life: 1
       });
     }
+
     animateConfetti();
   }
+
   function animateConfetti() {
     if (!confetti.length) return;
+
     fxCtx.clearRect(0, 0, fx.width, fx.height);
+
     confetti.forEach(p => {
       p.vy += p.g;
       p.x += p.vx;
       p.y += p.vy;
-      p.a -= 0.012;
-      fxCtx.globalAlpha = Math.max(0, Math.min(1, p.a));
-      fxCtx.fillStyle = "#ffe37a";
-      fxCtx.fillRect(p.x, p.y, p.s, p.s);
+      p.rot += p.rotSpd;
+
+      p.life -= 0.012;
+      p.alpha = Math.max(0, p.life);
+
+      fxCtx.save();
+      fxCtx.globalAlpha = p.alpha;
+      fxCtx.translate(p.x, p.y);
+      fxCtx.rotate(p.rot);
+
+      // glow
+      fxCtx.shadowBlur = 12;
+      fxCtx.shadowColor = p.color;
+      fxCtx.fillStyle = p.color;
+
+      if (p.shape === "circle") {
+        fxCtx.beginPath();
+        fxCtx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+        fxCtx.fill();
+      } else {
+        fxCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+      }
+
+      fxCtx.restore();
     });
-    confetti = confetti.filter(p => p.a > 0 && p.y < window.innerHeight + 40);
+
+    confetti = confetti.filter(
+      p => p.alpha > 0 && p.y < window.innerHeight + 60
+    );
+
     requestAnimationFrame(animateConfetti);
   }
+
+  function triggerPull10Effects(rarity) {
+    if (rarity === "Ultra") {
+      launchConfetti("Ultra");
+      setTimeout(() => launchConfetti("Ultra"), 200);
+      ultraFlash();
+      playSfx("rare");
+    } else if (rarity === "Mythic") {
+      launchConfetti("Mythic");
+      playSfx("rare");
+    } else if (rarity === "Rare") {
+      launchConfetti("Rare");
+    }
+  }
+
+  function towerXpBurst() {
+    const t = document.getElementById("towerBg");
+    if (!t) return;
+
+    t.classList.add("towerBurst");
+
+    setTimeout(() => {
+      t.classList.remove("towerBurst");
+    }, 700);
+  }
+
 
   // =========================
   // Timing Bar (STOP needle)
@@ -499,7 +573,7 @@ window.addEventListener("load", () => {
     if (!win) return;
 
     win.innerHTML = `<div class="capsuleRoll">
-  ${D.items.sort(() => Math.random() - 0.5).slice(0, 10).map(i => i.icon).join(" ")}
+  ${D.items.sort(() => Math.random() - 0.5).slice(0, 6).map(i => i.icon).join(" ")}
 </div>`;
 
   }
@@ -610,8 +684,77 @@ window.addEventListener("load", () => {
         rar === "Rare" ? "RARE!! 💜" : "Common ✨";
     setLumo(`${vibe(res.rarity)} ${it.name} (+${res.coins}c)`);
 
-    if (res.rarity === "Ultra" || res.rarity === "Mythic") launchConfetti();
+    if (res.rarity === "Ultra") {
+      launchConfetti("Ultra");
+      ultraFlash();
+    } else if (res.rarity === "Mythic") {
+      launchConfetti("Mythic");
+    }
   }
+
+  function openPull10Modal(results) {
+    const rarityRank = { Common: 1, Rare: 2, Mythic: 3, Ultra: 4 };
+
+    const best = results.reduce(
+      (a, b) => rarityRank[b.rarity] > rarityRank[a.rarity] ? b : a,
+      results[0]
+    );
+
+    const totalCoins = results.reduce((a, r) => a + r.coins, 0);
+
+    const itemsHtml = results.map((r, i) => {
+      const isBest = r === best;
+      const cls = rarityClass(r.rarity);
+
+      return `
+    <div
+      class="pull10Item ${cls} ${isBest ? "bestPull" : ""}"
+      style="animation-delay:${i * 40}ms"
+    >
+      <div class="pull10Icon">${r.item.icon}</div>
+      <span class="tag ${cls}">${r.rarity}</span>
+    </div>
+  `;
+    }).join("");
+
+
+    openModal(`
+    <div class="panel pull10Panel">
+      <div class="panelHead">
+        <div>
+          <h2 class="h2">✨ Pull x10 Results</h2>
+          <p class="muted">Best pull: <b>${best.rarity}</b></p>
+        </div>
+        <button class="pill" id="close10">Close</button>
+      </div>
+
+      <div class="pull10Grid">
+        ${itemsHtml}
+      </div>
+
+      <div class="spread" style="margin-top:14px">
+        <div class="muted">Total Coins</div>
+        <div style="font-weight:1000">+${totalCoins}c</div>
+      </div>
+    </div>
+  `);
+
+    $("#close10").onclick = closeModal;
+
+    // 🔥 Delay effects slightly so the modal "lands" first
+    setTimeout(() => {
+      triggerPull10Effects(best.rarity);
+    }, 450);
+  }
+
+
+  function ultraFlash() {
+    const f = document.createElement("div");
+    f.className = "ultraFlash";
+    document.body.appendChild(f);
+    setTimeout(() => f.remove(), 600);
+  }
+
 
   // =========================
   // Scene Viewer
@@ -805,7 +948,7 @@ window.addEventListener("load", () => {
     if (mgReward.gotCapsule) {
       const res = pullOnce("Rare");
       setLumo(`Mini-game capsule: ${getItem(res.itemId).name} (${res.rarity}) +${res.coins}c`);
-      if (res.rarity === "Ultra") launchConfetti();
+      if (res.rarity === "Ultra") launchConfetti("Ultra");
     }
 
     saveNow();
@@ -1241,49 +1384,78 @@ window.addEventListener("load", () => {
         shakeMachine();
         playSfx("stop");
 
+        // 1️⃣ start the rolling animation (already exists)
         startCapsuleRoll();
+
+        // 2️⃣ decide result IMMEDIATELY (important)
         const { tier } = barTier();
-        const win = document.querySelector(".capsuleWindow");
-        if (win && hasCosmetic("capsule_window_fx")) win.classList.add("glow");
-        setTimeout(() => win && win.classList.remove("glow"), 600);
-
         const res = pullOnce(tier);
-        if (res.rarity === "Ultra" || res.rarity === "Mythic") {
-          playSfx("rare");
-        }
-
         const it = getItem(res.itemId);
-        dropCapsule(it.icon);
-        if (hasCosmetic("sfx_chimes") && (res.rarity === "Rare" || res.rarity === "Mythic" || res.rarity === "Ultra")) {
-          playSfx("rare");
-        }
 
-        stopCapsuleRoll(it.icon);
+        // 3️⃣ choose delay based on rarity
+        const revealDelay =
+          res.rarity === "Ultra" ? 1400 :
+            res.rarity === "Mythic" ? 1100 :
+              res.rarity === "Rare" ? 800 :
+                600;
 
-        safeText("#lastPull", `You hit ${tier}! ${it.name} (${res.rarity}) +${res.coins}c`);
-        renderHud();
+        // 4️⃣ delay the reveal
+        setTimeout(() => {
+          stopCapsuleRoll(" ");
 
-        // THE GAME MOMENT
-        openCapsuleReveal({ tier, res, it });
+          // stop rolling + show icon
+          stopCapsuleRoll(it.icon);
+
+          // drop capsule effect
+          dropCapsule(it.icon);
+
+          // rarity effects
+          if (res.rarity === "Ultra" || res.rarity === "Mythic") {
+            playSfx("rare");
+            launchConfetti(res.rarity);
+          }
+
+          renderHud();
+
+          setTimeout(() => {
+            openCapsuleReveal({ tier, res, it });
+          }, 445);
+
+        }, revealDelay);
       };
+
     }
 
     const pull10Btn = $("#pull10Btn");
     if (pull10Btn) {
       pull10Btn.onclick = () => {
-        let coins = 0, ultra = 0, myth = 0, rare = 0;
+        const results = [];
+
         for (let i = 0; i < 10; i++) {
           const r = pullOnce("Common");
-          coins += r.coins;
-          if (r.rarity === "Ultra") ultra++;
-          else if (r.rarity === "Mythic") myth++;
-          else if (r.rarity === "Rare") rare++;
+          results.push({
+            item: getItem(r.itemId),
+            rarity: r.rarity,
+            coins: r.coins
+          });
         }
+
         renderHud();
-        safeText("#lastPull", `x10 done: +${coins}c (Ultra:${ultra} Mythic:${myth} Rare:${rare})`);
-        setLumo("x10 is fast — skill pulls feel magical.");
-        if (ultra || myth) launchConfetti();
-      };
+        setLumo("✨ Pull x10 complete!");
+
+        shakeMachine();
+        playSfx("pull10");
+
+        // 1️⃣ Open modal first
+        setTimeout(() => {
+          openPull10Modal(results);
+        }, 700);
+
+        // 2️⃣ Delay the "impact"
+        setTimeout(() => {
+          towerXpBurst();
+        }, 300);
+      }
     }
 
     // Scenes buttons

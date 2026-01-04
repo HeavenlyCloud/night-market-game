@@ -25,6 +25,11 @@
     box-sizing: border-box
 }
 
+html {
+    scroll-behavior: smooth;
+    overflow-y: scroll;
+}
+
 html,
 body {
     height: 100%;
@@ -235,12 +240,20 @@ body::after {
 
 /* panels become glassy + cute */
 .panel {
-    background: linear-gradient(180deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .06));
+    background: linear-gradient(180deg,
+            rgba(255, 255, 255, .22),
+            rgba(255, 255, 255, .12));
     border: 1px solid rgba(255, 255, 255, .14);
     border-radius: 34px;
     padding: 18px;
     box-shadow: var(--shadow);
     backdrop-filter: blur(12px);
+}
+
+.modal .panel {
+    box-shadow:
+        0 30px 70px rgba(0, 0, 0, .55),
+        inset 0 0 0 9999px rgba(0, 0, 0, .08);
 }
 
 .panelHead {
@@ -590,16 +603,112 @@ body::after {
     z-index: 40
 }
 
-.modal {
+/* .modal {
     position: fixed;
     left: 50%;
-    top: 50%;
+    top: 62%;
     transform: translate(-50%, -50%);
     width: min(740px, 92vw);
     max-height: min(80vh, 760px);
     overflow: auto;
     z-index: 50;
+} */
+
+.modal {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    width: min(740px, 94vw);
+    max-height: 80vh;
+
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    z-index: 50;
+
+    animation: modalSlideIn .32s cubic-bezier(.22, .9, .25, 1);
+    will-change: transform, opacity;
 }
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0.5;
+        transform: translate(-50%, -42%) scale(.96);
+    }
+
+    to {
+        opacity: 1.5;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+
+/* =========================
+   PULL x10 RESULTS GRID
+========================= */
+
+.pull10Panel {
+    padding-bottom: 22px;
+    animation-duration: .32s;
+}
+
+.pull10Grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-top: 14px;
+}
+
+@media (max-width: 640px) {
+    .pull10Grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.pull10Item {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 22px;
+    display: grid;
+    place-items: center;
+
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .14);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, .35);
+
+    animation: popIn .25s ease-out both;
+}
+
+.pull10Item.common {
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .08);
+}
+
+.pull10Item.rare {
+    box-shadow: 0 0 18px rgba(154, 123, 255, .45);
+}
+
+.pull10Item.mythic {
+    box-shadow: 0 0 22px rgba(255, 125, 216, .55);
+}
+
+.pull10Item.ultra {
+    box-shadow: 0 0 28px rgba(255, 227, 122, .65);
+}
+
+.pull10Icon {
+    font-size: 38px;
+}
+
+.pull10Item .tag {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    font-size: 10px;
+    padding: 4px 6px;
+}
+
 
 .hidden {
     display: none !important
@@ -657,6 +766,9 @@ body::after {
     text-align: center;
     position: relative;
     z-index: 6;
+
+    transform-style: preserve-3d;
+    animation: idleFloat 4s ease-in-out infinite;
 }
 
 /* Machine top */
@@ -905,6 +1017,7 @@ body::after {
     filter: blur(12px);
     opacity: .6;
     pointer-events: none;
+    z-index: -1;
 }
 
 /* Add a bezel to the capsule window */
@@ -1003,7 +1116,7 @@ body::after {
     gap: 20px;
     width: 100%;
     position: relative;
-    z-index: 5;
+    z-index: 4;
 }
 
 .lumoSide {
@@ -1114,41 +1227,71 @@ body::after {
     justify-content: center;
     align-items: center;
     gap: 10px;
+    line-height: 1;
     font-size: 26px;
     animation: rollCaps 0.6s linear infinite;
+
+    white-space: nowrap;
+    flex-wrap: nowrap;
+    overflow: hidden;
 }
 
 @keyframes rollCaps {
     0% {
-        transform: translateX(0);
-        filter: blur(0px);
-        opacity: 1;
-    }
-
-    50% {
-        transform: translateX(-10px);
-        filter: blur(1.2px);
+        transform: translateX(8px);
+        filter: blur(1px);
         opacity: .85;
     }
 
-    100% {
-        transform: translateX(0);
+    50% {
+        transform: translateX(-8px);
         filter: blur(0px);
         opacity: 1;
     }
+
+    100% {
+        transform: translateX(8px);
+        filter: blur(1px);
+        opacity: .85;
+    }
 }
 
+.towerBurst {
+    animation: towerPulse 0.7s ease-out;
+}
+
+@keyframes towerPulse {
+    0% {
+        --tower-scale: 1;
+    }
+
+    40% {
+        --tower-scale: 1.08;
+    }
+
+    100% {
+        --tower-scale: 1;
+    }
+}
+
+
 .towerBg {
-    position: absolute;
-    bottom: 130px;
+    position: fixed;
+    bottom: 40px;
     left: 50%;
-    transform: translateX(-50%);
+    --tower-scale: 1;
+    transform: translateX(-50%) scaleY(var(--tower-scale));
+
+
     width: min(420px, 70vw);
     height: 0;
-    opacity: .40;
+
+    opacity: .35;
     pointer-events: none;
 
-    /* nice look (keep your vibe) */
+    z-index: 1;
+    /* 👈 FORCE BEHIND */
+
     background:
         repeating-linear-gradient(to top,
             rgba(255, 255, 255, .08) 0px,
@@ -1158,13 +1301,14 @@ body::after {
         linear-gradient(180deg, rgba(255, 227, 122, .18), rgba(255, 125, 216, .08));
 
     border-radius: 28px 28px 0 0;
-    filter: blur(.2px);
+    filter: blur(.4px);
+
     transition: height .6s ease;
 
-    z-index: 1;
     mask-image: linear-gradient(to top, black 65%, transparent 100%);
     -webkit-mask-image: linear-gradient(to top, black 65%, transparent 100%);
 }
+
 
 .loadingScreen {
     position: fixed;
@@ -1233,11 +1377,6 @@ body::after {
     font-size: 13px;
     color: #b9c2e8;
     opacity: .8;
-}
-
-.gachaMachine {
-    transform-style: preserve-3d;
-    animation: idleFloat 4s ease-in-out infinite;
 }
 
 @keyframes idleFloat {
@@ -1533,4 +1672,23 @@ body.skinRibbon .capsuleArt::after {
     top: -8px;
     right: -6px;
     font-size: 24px;
+}
+
+.ultraFlash {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle, rgba(255, 227, 122, .35), transparent 70%);
+    pointer-events: none;
+    z-index: 55;
+    animation: flashOut .6s ease-out forwards;
+}
+
+@keyframes flashOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }
