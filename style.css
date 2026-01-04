@@ -25,11 +25,6 @@
     box-sizing: border-box
 }
 
-html {
-    scroll-behavior: smooth;
-    overflow-y: scroll;
-}
-
 html,
 body {
     height: 100%;
