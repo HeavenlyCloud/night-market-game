@@ -1409,6 +1409,14 @@ body::after {
     opacity: .8;
 }
 
+.loadingFooter {
+    position: absolute;
+    bottom: 18px;
+    font-size: 12px;
+    color: #9a9fbf;
+    opacity: .7;
+}
+
 @keyframes idleFloat {
 
     0%,
