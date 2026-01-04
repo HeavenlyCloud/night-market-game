@@ -39,6 +39,22 @@ window.addEventListener("load", () => {
   let S = loadSave() ?? defaultState();
   normalizeState();
 
+  const CONFETTI_COLORS = [
+    "#ffe37a", // gold
+    "#ff7dd8", // pink
+    "#9a7bff", // purple
+    "#75ffd8"  // mint
+  ];
+
+
+  const RARITY_ORDER = {
+    ultra: 4,
+    mythic: 3,
+    rare: 2,
+    common: 1
+  };
+
+
   const SFX = {
     click: new Audio("sounds/click_001.ogg"),
     stop: new Audio("sounds/confirmation_001.ogg"),
@@ -290,6 +306,7 @@ window.addEventListener("load", () => {
 
   let confetti = [];
   function launchConfetti() {
+
     confetti = [];
     const count = hasCosmetic("confetti_boost") ? 220 : 140;
     for (let i = 0; i < count; i++) {
@@ -314,6 +331,7 @@ window.addEventListener("load", () => {
       p.y += p.vy;
       p.a -= 0.012;
       fxCtx.globalAlpha = Math.max(0, Math.min(1, p.a));
+      fxCtx.fillStyle = "#ffe37a";
       fxCtx.fillRect(p.x, p.y, p.s, p.s);
     });
     confetti = confetti.filter(p => p.a > 0 && p.y < window.innerHeight + 40);
@@ -463,6 +481,8 @@ window.addEventListener("load", () => {
     S.currencies.coins += coins;
 
     S.collection.owned[itemId] = (S.collection.owned[itemId] || 0) + 1;
+    S.collection.seen[itemId] = true;
+
 
     const count = S.collection.owned[itemId];
     const xpGain = count === 1 ? rarityXp(rarity) : Math.max(1, Math.floor(rarityXp(rarity) * 0.35));
@@ -895,46 +915,69 @@ window.addEventListener("load", () => {
   }
 
   function renderCollection() {
-    const isNew = !S.collection.seen[id];
-    const entries = Object.entries(S.collection.owned);
-    const total = entries.reduce((a, [, c]) => a + c, 0);
+    const items = Object.values(D.items);
 
-    const cards = entries
-      .sort((a, b) => (b[1] - a[1]))
-      .map(([id, count]) => {
-        const it = getItem(id);
-        if (!it) return "";
+    // sort items properly
+    items.sort((a, b) => {
+      const countA = S.collection.owned[a.id] || 0;
+      const countB = S.collection.owned[b.id] || 0;
 
-        return `
-        <div class="collectItem ${rarityClass(it.rarity)}">
-          <div class="collectGlow"></div>
+      // 1️⃣ owned first
+      if ((countA > 0) !== (countB > 0)) {
+        return countB - countA;
+      }
 
-          <div class="collectIcon">
-            ${it.icon}
-            ${count === 1 ? `<span class="newBadge">NEW</span>` : ``}
-          </div>
+      // 2️⃣ rarity
+      const rA = RARITY_ORDER[a.rarity.toLowerCase()] || 0;
+      const rB = RARITY_ORDER[b.rarity.toLowerCase()] || 0;
+      if (rA !== rB) return rB - rA;
 
+      // 3️⃣ count
+      if (countA !== countB) return countB - countA;
 
-          <div class="collectInfo">
-            <div class="collectName">${it.name}</div>
-            <div class="collectDesc">${it.desc}</div>
-          </div>
+      // 4️⃣ name
+      return a.name.localeCompare(b.name);
+    });
 
-          <div class="collectFooter">
-            ${rarityTag(it.rarity)}
-            <div class="collectCount">×${count}</div>
-          </div>
+    const total = Object.values(S.collection.owned)
+      .reduce((a, c) => a + c, 0);
+
+    const cards = items.map(it => {
+      const count = S.collection.owned[it.id] || 0;
+      if (count === 0) return ""; // hide unowned (optional)
+
+      return `
+      <div class="collectItem ${rarityClass(it.rarity)}">
+        <div class="collectGlow"></div>
+
+        <div class="collectIcon">
+          ${it.icon}
+          ${count === 1 ? `<span class="newBadge">NEW</span>` : ``}
         </div>
-      `;
-      }).join("");
+
+        <div class="collectInfo">
+          <div class="collectName">${it.name}</div>
+          <div class="collectDesc">${it.desc}</div>
+        </div>
+
+        <div class="collectFooter">
+          ${rarityTag(it.rarity)}
+          <div class="collectCount">×${count}</div>
+        </div>
+      </div>
+    `;
+    }).join("");
 
     return panel(
       "Collection Book",
       `Memories collected: ${total} • duplicates still grow the Tower`,
       `<button class="pill" id="toMachineBtn">Back to Machine</button>`,
-      `<div class="collectionGrid">${cards || `<div class="muted">Pull capsules to start collecting ✨</div>`}</div>`
+      `<div class="collectionGrid">
+      ${cards || `<div class="muted">Pull capsules to start collecting ✨</div>`}
+    </div>`
     );
   }
+
 
 
   function renderScenes() {
